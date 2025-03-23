@@ -1,5 +1,9 @@
 # skyrats
 
+A abordagem utilizada nessa resolução preve o uso das duas cameras RunCam 5 e os sensores de detecção para detecção dos postes.
+
+Uma representação das versões está disponivel via streamlit, clique aqui para ver a estrategia em ação.
+
 ## [Primeira abordagem](https://github.com/joaovrmdev/skyrats/blob/main/sky_case_v1.py)
 Nessa etapa, estava apenas me preocupando em como resolver a etapa de grafos, ou seja, nessa etapa, eu fui bem pouco disruptivo, apenas explorei o problema conceitualmente e tentei gerar representações visuais minimas.
 Issues:
