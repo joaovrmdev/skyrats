@@ -3,9 +3,9 @@
 ## [Primeira abordagem](https://github.com/joaovrmdev/skyrats/blob/main/sky_case_v1.py)
 Nessa etapa, estava apenas me preocupando em como resolver a etapa de grafos, ou seja, nessa etapa, eu fui bem pouco disruptivo, apenas explorei o problema conceitualmente e tentei gerar representações visuais minimas.
 Issues:
--> Não considerava posições aleatorias. 
--> Apenas um tipo de base.
--> Não foquei na delimitação da area de forma exata.
++ Não considerava posições aleatorias. 
++ Apenas um tipo de base.
++ Não foquei na delimitação da area de forma exata.
 
 Resumidamente, um grafo bem grosseiro haha.
 
@@ -126,8 +126,9 @@ Exemplo do gráfico gerado (Dinamico):
 
 Aqui já estamos trabalhando com o cenario real do case. Temos start nos 4 vertices possiveis, e a minha última abordagem disruptiva para melhor performance.
 Features:
-- Além da abordagem com a diagonal, agora usamos o metodo **diagonal ou truco**, se o drone registra as 6 bases durante o percurso diagonal, ele truca e inicia dessa posição mesmo, garantindo um pouco de ganho de tempo.
-Adendo final -> Estou assumindo uma implementação das cameras (RunCam 5) com acuidade visual de 170º para cada uma; estas estariam dispostas na frente e atrás do drone. Assumi ainda, conforme veremos que o drone consegue identificar a base estando a 6 metros de distancia.
++ Além da abordagem com a diagonal, agora usamos o metodo **diagonal ou truco**, se o drone registra as 6 bases durante o percurso diagonal, ele truca e inicia dessa posição mesmo, garantindo um pouco de ganho de tempo.
++ Adendo final:
+Estou assumindo uma implementação das cameras (RunCam 5) com acuidade visual de 170º para cada uma; estas estariam dispostas na frente e atrás do drone. Assumi ainda, conforme veremos que o drone consegue identificar a base estando a 6 metros de distancia.
 
 ### Funcionalidades e Melhorias
 
