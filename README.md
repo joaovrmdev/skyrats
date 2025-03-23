@@ -1,8 +1,14 @@
 # skyrats
 
 ## [Primeira abordagem](https://github.com/joaovrmdev/skyrats/blob/main/sky_case_v1.py)
+Nessa etapa, estava apenas me preocupando em como resolver a etapa de grafos, ou seja, nessa etapa, eu fui bem pouco disruptivo, apenas explorei o problema conceitualmente e tentei gerar representações visuais minimas.
+Issues:
+-> Não considerava posições aleatorias 
+-> Apenas um tipo de base
 
-### Roteirização Dinâmica com Clusterização das Bases
+Resumidamente, um grafo bem grosseiro haha.
+
+### Clusterização das Bases
 Este projeto implementa uma abordagem para planejamento de rotas em um grid, utilizando algoritmos clássicos como o A* para busca de caminho, o problema do caixeiro viajante (TSP) resolvido por força bruta para definir a ordem de visita, e a clusterização das bases utilizando o algoritmo DBSCAN.
 
 ### Funcionalidades
@@ -59,13 +65,13 @@ Este projeto implementa uma abordagem para planejamento de rotas em um grid, uti
 6. **Visualização:**  
    O grid, obstáculos, bases e a rota são plotados utilizando a biblioteca Matplotlib.
 
-### Melhorias e Versões Futuras
+Grafico gerado (fixo):
 
-Esta é a primeira versão do código. Nos próximos códigos (versões 2 e 3) espera-se:
-- **Refinamento dos Algoritmos:** Otimizações na implementação do A* e do TSP para melhorar desempenho e escalabilidade.
-- **Interface Interativa:** Implementação de uma interface gráfica para visualização dinâmica da rota e dos clusters.
-- **Flexibilidade nos Parâmetros:** Possibilidade de ajustar parâmetros como `eps` no DBSCAN e critérios de distância de forma dinâmica, além de melhor tratamento de exceções e validação de entrada.
+
 
 ---
+
+
+## [Segunda abordagem](https://github.com/joaovrmdev/skyrats/blob/main/sky_case_v2.py)
 
 
