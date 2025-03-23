@@ -51,7 +51,7 @@ def a_star(grid, start, goal):
         for i, j in neighbors:
             neighbor = (current[0] + i, current[1] + j)
             if 0 <= neighbor[0] < grid.shape[0] and 0 <= neighbor[1] < grid.shape[1]:
-                if grid[neighbor] == 1:  # Abordagem de grafos que utilizei para representar um obstáculo
+                if grid[neighbor] == 1:
                     continue
                 tentative_g_score = gscore[current] + 1
                 if neighbor in close_set and tentative_g_score >= gscore.get(neighbor, float('inf')):
@@ -63,17 +63,17 @@ def a_star(grid, start, goal):
                     heapq.heappush(open_heap, (fscore[neighbor], neighbor))
     return None
 
-
 def tsp_order(points, start):
     """
-    Resolve o Problema do Caixeiro Viajante (TSP) do jeito mais pragmatico e simples que consegui.
+    Resolve o Problema do Caixeiro Viajante (TSP) por força bruta para um conjunto pequeno de pontos,
+    utilizando a distância Euclidiana para calcular a rota de menor custo.
 
     Parâmetros:
-        points (list): Lista de pontos (coordenadas) a serem visitados.
-        start (tuple): Coordenadas do ponto de partida.
+        points (list): Lista de pontos (tuplas) a serem visitados.
+        start (tuple): Ponto de partida para o cálculo da rota.
 
     Retorna:
-        list: Sequência de pontos que resulta na menor rota total considerando a distância Manhattan.
+        list: Ordem dos pontos que minimiza a rota total a partir do ponto 'start'.
     """
     best_order = None
     best_distance = float('inf')
@@ -129,15 +129,14 @@ def choose_cluster(clusters, start):
             best_cluster = label
     return best_cluster
 
+# Dados iniciais
 grid_size = (20, 20)
 grid = np.zeros(grid_size, dtype=int)
 obstaculos = [(3,3), (3,4), (3,5), (10,2), (11,2), (12,2), (15,10), (16,10), (17,10)]
 for obs in obstaculos:
     grid[obs] = 1
 
-# Ponto de partida definido de forma fixa
 start = (0, 0)
-
 pattern1 = [(5, 5), (5, 15), (10, 10)]
 pattern2 = [(15, 5), (15, 15), (10, 18)]
 todas_bases = pattern1 + pattern2
@@ -171,28 +170,54 @@ for i in range(len(rota_pontos) - 1):
     if segmento is None:
         print("Não foi possível encontrar caminho entre", rota_pontos[i], "e", rota_pontos[i+1])
         break
-    if i != 0:  # abordagem de grafos para nao revisitar ponto anterior e deixar marcado como lugar visitado
+    if i != 0:  # evita duplicar o último ponto do segmento anterior
         segmento = segmento[1:]
     caminho_completo += segmento
 
-plt.figure(figsize=(6, 6))
-plt.imshow(grid, cmap="Greys", origin="lower")
-caminho_x = [p[1] for p in caminho_completo]
-caminho_y = [p[0] for p in caminho_completo]
-plt.plot(caminho_x, caminho_y, color="red", label="Rota planejada")
-plt.scatter(start[1], start[0], color="green", marker="o", s=100, label="Partida")
+def main():
+    """
+    Função principal que executa a lógica do projeto:
+      - Calcula a rota planejada com A* e TSP.
+      - Realiza a clusterização das bases.
+      - Plota o grid, a rota e as bases.
+    
+    Retorna:
+        fig: Objeto Matplotlib Figure com o gráfico gerado.
+    """
+    # Cria a figura e os eixos
+    fig, ax = plt.subplots(figsize=(6, 6))
+    
+    # Exibe o grid (imagem em escala de cinza)
+    ax.imshow(grid, cmap="Greys", origin="lower")
+    
+    # Prepara os dados do caminho
+    caminho_x = [p[1] for p in caminho_completo]
+    caminho_y = [p[0] for p in caminho_completo]
+    
+    # Plota a rota planejada
+    ax.plot(caminho_x, caminho_y, color="red", label="Rota planejada")
+    
+    # Marca o ponto de partida
+    ax.scatter(start[1], start[0], color="green", marker="o", s=100, label="Partida")
+    
+    # Plota as bases dos dois padrões
+    for base in ordem_primeiro:
+        ax.scatter(base[1], base[0], color="blue", marker="^", s=100, label="Padrão Iniciado")
+    for base in ordem_segundo:
+        ax.scatter(base[1], base[0], color="orange", marker="s", s=100, label="Outro Padrão")
+    
+    # Ajusta a legenda para evitar duplicatas
+    handles, labels = ax.get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    ax.legend(by_label.values(), by_label.keys())
+    
+    ax.set_title("Roteirização Dinâmica com Clusterização das Bases")
+    ax.set_xlabel("Coordenada X")
+    ax.set_ylabel("Coordenada Y")
+    ax.grid(True)
+    
+    return fig
 
-for base in ordem_primeiro:
-    plt.scatter(base[1], base[0], color="blue", marker="^", s=100, label="Padrão Iniciado")
-for base in ordem_segundo:
-    plt.scatter(base[1], base[0], color="orange", marker="s", s=100, label="Outro Padrão")
-
-# Evita legenda duplicada
-handles, labels = plt.gca().get_legend_handles_labels()
-by_label = dict(zip(labels, handles))
-plt.legend(by_label.values(), by_label.keys())
-plt.title("Roteirização Dinâmica com Clusterização das Bases")
-plt.xlabel("Coordenada X")
-plt.ylabel("Coordenada Y")
-plt.grid(True)
-plt.show()
+if __name__ == "__main__":
+    fig = main()
+    plt.show()
