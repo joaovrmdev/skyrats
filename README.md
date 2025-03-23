@@ -67,7 +67,7 @@ Este projeto implementa uma abordagem para planejamento de rotas em um grid, uti
 
 Grafico gerado (fixo):
 
-
+![sky case v1](https://github.com/joaovrmdev/skyrats/blob/main/img/sky_case_v1.png)
 
 ---
 
