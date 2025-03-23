@@ -1,7 +1,6 @@
 import streamlit as st
 import importlib
 
-st.set_option('deprecation.showPyplotGlobalUse', False)
 
 st.markdown(
     """
