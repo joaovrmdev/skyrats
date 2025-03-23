@@ -3,8 +3,9 @@
 ## [Primeira abordagem](https://github.com/joaovrmdev/skyrats/blob/main/sky_case_v1.py)
 Nessa etapa, estava apenas me preocupando em como resolver a etapa de grafos, ou seja, nessa etapa, eu fui bem pouco disruptivo, apenas explorei o problema conceitualmente e tentei gerar representações visuais minimas.
 Issues:
--> Não considerava posições aleatorias 
--> Apenas um tipo de base
+-> Não considerava posições aleatorias. 
+-> Apenas um tipo de base.
+-> Não foquei na delimitação da area de forma exata.
 
 Resumidamente, um grafo bem grosseiro haha.
 
