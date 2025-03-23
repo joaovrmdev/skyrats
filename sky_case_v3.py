@@ -21,16 +21,16 @@ def a_star(grid, start, goal):
         list: Caminho do ponto de início ao destino, ou None se não houver caminho.
     """
     neighbors = [((1,1), math.sqrt(2)), ((1,-1), math.sqrt(2)),
-             ((-1,1), math.sqrt(2)), ((-1,-1), math.sqrt(2)),
-             ((0,1), 1), ((0,-1), 1), ((1,0), 1), ((-1,0), 1)]
+                 ((-1,1), math.sqrt(2)), ((-1,-1), math.sqrt(2)),
+                 ((0,1), 1), ((0,-1), 1), ((1,0), 1), ((-1,0), 1)]
     
-    def manhattan_distance(a, b):
+    def distance(a, b):
         return math.hypot(a[0]-b[0], a[1]-b[1])
     
     close_set = set()
     came_from = {}
     gscore = {start: 0}
-    fscore = {start: manhattan_distance(start, goal)}
+    fscore = {start: distance(start, goal)}
     open_heap = []
     heapq.heappush(open_heap, (fscore[start], start))
     
@@ -55,7 +55,7 @@ def a_star(grid, start, goal):
                 if tentative_g < gscore.get(neighbor, float('inf')):
                     came_from[neighbor] = current
                     gscore[neighbor] = tentative_g
-                    fscore[neighbor] = tentative_g + manhattan_distance(neighbor, goal)
+                    fscore[neighbor] = tentative_g + distance(neighbor, goal)
                     heapq.heappush(open_heap, (fscore[neighbor], neighbor))
     return None
 
@@ -67,7 +67,7 @@ def tsp_order(points, start):
     
     Parâmetros:
         points (list): Lista de pontos a serem visitados.
-        start (tuple): Ponto de partida (ex.: detection_endpoint).
+        start (tuple): Ponto de partida.
     
     Retorna:
         list: Ordem que minimiza a rota total.
@@ -141,34 +141,55 @@ def main():
     num_posts = 10
 
     # ---------------- Posição de partida do drone em um dos cantos ----------------
-    # Se for usar posições como (0,10) ou (10,10), ajuste o grid.
-    drone_positions = [(0, 0), (0, 9), (9, 0), (9, 9)]
+    drone_positions = [(0, 0), (0, grid_dim-1), (grid_dim-1, 0), (grid_dim-1, grid_dim-1)]
     drone_start = random.choice(drone_positions)
 
+    # ---------------- Geração das Bases (primeiro, para evitar conflito com os postes) ----------------
+    true_pattern1 = gerar_bases(3, [drone_start])
+    true_pattern2 = gerar_bases(3, true_pattern1 + [drone_start])
+    
+    # ---------------- Inicializa a grade ----------------
     grid = np.zeros((grid_dim, grid_dim), dtype=int)
 
-    # Gera postes aleatórios, evitando a posição de início do drone
+    # ---------------- Geração dos Postes evitando drone e bases ----------------
+    evite = set(true_pattern1 + true_pattern2 + [drone_start])
     posts = set()
     while len(posts) < num_posts:
         pos = (random.randint(0, grid_dim-1), random.randint(0, grid_dim-1))
-        if pos == drone_start:
+        if pos in evite:
             continue
         posts.add(pos)
     posts = list(posts)
     for pos in posts:
         grid[pos] = 1
 
-    # ---------------- Geração de Bases ----------------
-    true_pattern1 = gerar_bases(3, posts)
-    true_pattern2 = gerar_bases(3, posts + true_pattern1)
-
-    # ---------------- Parâmetros de Detecção ----------------
-    detection_goal = (grid_dim-1 - drone_start[0], grid_dim-1 - drone_start[1]) # Canto oposto
+    # ---------------- Definição do ponto de detecção ----------------
+    detection_goal = (grid_dim-1 - drone_start[0], grid_dim-1 - drone_start[1])
+    
+    # ---------------- Geração da Rota de Detecção com Tentativas ----------------
     visual_range = 6.0                         # Alcance visual (6 m)
     detection_stop_fraction = 0.8              # Interrompe a detecção após 80% da rota
+    max_attempts = 10
+    detection_route = None
 
-    # ---------------- Rota de Detecção ----------------
-    detection_route = a_star(grid, drone_start, detection_goal)
+    for attempt in range(max_attempts):
+        detection_route = a_star(grid, drone_start, detection_goal)
+        if detection_route is not None:
+            break
+        else:
+            print(f"Tentativa {attempt+1}: rota de detecção não encontrada, regenerando postes.")
+            # Regenera a grade e os postes
+            grid = np.zeros((grid_dim, grid_dim), dtype=int)
+            posts = set()
+            while len(posts) < num_posts:
+                pos = (random.randint(0, grid_dim-1), random.randint(0, grid_dim-1))
+                if pos in evite:
+                    continue
+                posts.add(pos)
+            posts = list(posts)
+            for pos in posts:
+                grid[pos] = 1
+
     if detection_route is None:
         raise Exception("Não foi possível calcular a rota de detecção evitando os postes.")
 
